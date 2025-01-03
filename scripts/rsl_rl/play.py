@@ -49,6 +49,8 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 # Import extensions to set up environment tasks
 import wheeled_legged_rl.tasks  # noqa: F401
+from wheeled_legged_rl.third_party.rsl_rl_amp.algorithms import AMPPPO
+from wheeled_legged_rl.third_party.rsl_rl_amp.runners import AmpOnPolicyRunner
 
 
 def main():
@@ -87,7 +89,8 @@ def main():
 
     print(f"[INFO]: Loading model checkpoint from: {resume_path}")
     # load previously trained model
-    ppo_runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
+    # ppo_runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
+    ppo_runner = AmpOnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
     ppo_runner.load(resume_path)
 
     # obtain the trained policy for inference
