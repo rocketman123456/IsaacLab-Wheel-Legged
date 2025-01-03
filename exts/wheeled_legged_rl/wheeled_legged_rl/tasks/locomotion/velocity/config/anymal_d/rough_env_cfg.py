@@ -1,6 +1,6 @@
 from omni.isaac.lab.utils import configclass
 
-from wheeled-legged-rl.tasks.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
+from wheeled_legged_rl.tasks.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
 
 ##
 # Pre-defined configs

@@ -13,7 +13,7 @@ COPY ../ ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}
 
 # # Install whatever you need as additional dependencies.
 RUN bash -i -c "source ${HOME}/.bashrc && \
-    cd ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}/exts/wheeled-legged-rl && \
+    cd ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}/exts/wheeled_legged_rl && \
     pip install -e ."
 
 # make working directory as the Isaac Lab directory

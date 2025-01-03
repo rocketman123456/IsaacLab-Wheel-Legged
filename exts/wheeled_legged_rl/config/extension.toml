@@ -11,7 +11,7 @@ title = "Extension Template"
 author = "Isaac Lab Project Developers"
 maintainer = "Isaac Lab Project Developers"
 description="Extension Template for Isaac Lab"
-repository = "https://github.com/isaac-sim/IsaacLabExtensionTemplate.git"
+repository = "https://github.com/rocketman123456/IsaacLab-Wheel-Legged.git"
 keywords = ["extension", "template", "isaaclab"]
 
 [dependencies]
@@ -21,7 +21,7 @@ keywords = ["extension", "template", "isaaclab"]
 # NOTE: Add additional dependencies here
 
 [[python.module]]
-name = "wheeled-legged-rl"
+name = "wheeled_legged_rl"
 
 [isaaclab_settings]
 # TODO: Uncomment and list any apt dependencies here.

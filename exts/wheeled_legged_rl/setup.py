@@ -1,4 +1,4 @@
-"""Installation script for the 'wheeled-legged-rl' python package."""
+"""Installation script for the 'wheeled_legged_rl' python package."""
 
 import os
 import toml
@@ -18,8 +18,8 @@ INSTALL_REQUIRES = [
 
 # Installation operation
 setup(
-    name="wheeled-legged-rl",
-    packages=["wheeled-legged-rl"],
+    name="wheeled_legged_rl",
+    packages=["wheeled_legged_rl"],
     author=EXTENSION_TOML_DATA["package"]["author"],
     maintainer=EXTENSION_TOML_DATA["package"]["maintainer"],
     url=EXTENSION_TOML_DATA["package"]["repository"],

@@ -1,4 +1,4 @@
-# Template for Isaac Lab Projects
+# IsaacLab Wheel Legged
 
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-4.2.0-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
 [![Isaac Lab](https://img.shields.io/badge/IsaacLab-1.2.0-silver)](https://isaac-sim.github.io/IsaacLab)
@@ -27,25 +27,16 @@ This repository serves as a template for building projects or extensions based o
 
 ```bash
 # Option 1: HTTPS
-git clone https://github.com/isaac-sim/IsaacLabExtensionTemplate.git
+git clone https://github.com/rocketman123456/IsaacLab-Wheel-Legged.git
 
 # Option 2: SSH
-git clone git@github.com:isaac-sim/IsaacLabExtensionTemplate.git
-```
-
-- Throughout the repository, the name `wheeled-legged-rl` only serves as an example and we provide a script to rename all the references to it automatically:
-
-```bash
-# Enter the repository
-cd IsaacLabExtensionTemplate
-# Rename all occurrences of wheeled-legged-rl (in files/directories) to your_fancy_extension_name
-python scripts/rename_template.py your_fancy_extension_name
+git clone git@github.com:rocketman123456/IsaacLab-Wheel-Legged.git
 ```
 
 - Using a python interpreter that has Isaac Lab installed, install the library
 
 ```bash
-python -m pip install -e exts/wheeled-legged-rl
+python -m pip install -e exts/wheeled_legged_rl
 ```
 
 - Verify that the extension is correctly installed by running the following command:
@@ -64,7 +55,7 @@ If everything executes correctly, it should create a file .python.env in the `.v
 
 ### Setup as Omniverse Extension (Optional)
 
-We provide an example UI extension that will load upon enabling your extension defined in `exts/wheeled-legged-rl/wheeled-legged-rl/ui_extension_example.py`. For more information on UI extensions, enable and check out the source code of the `omni.isaac.ui_template` extension and refer to the introduction on [Isaac Sim Workflows 1.2.3. GUI](https://docs.omniverse.nvidia.com/isaacsim/latest/introductory_tutorials/tutorial_intro_workflows.html#gui).
+We provide an example UI extension that will load upon enabling your extension defined in `exts/wheeled_legged_rl/wheeled_legged_rl/ui_extension_example.py`. For more information on UI extensions, enable and check out the source code of the `omni.isaac.ui_template` extension and refer to the introduction on [Isaac Sim Workflows 1.2.3. GUI](https://docs.omniverse.nvidia.com/isaacsim/latest/introductory_tutorials/tutorial_intro_workflows.html#gui).
 
 To enable your extension, follow these steps:
 
@@ -177,7 +168,7 @@ In some VsCode versions, the indexing of part of the extensions is missing. In t
 ```json
 {
     "python.analysis.extraPaths": [
-        "<path-to-ext-repo>/exts/wheeled-legged-rl"
+        "<path-to-ext-repo>/exts/wheeled_legged_rl"
     ]
 }
 ```

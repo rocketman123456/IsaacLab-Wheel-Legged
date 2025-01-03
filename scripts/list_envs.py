@@ -20,7 +20,7 @@ import gymnasium as gym
 from prettytable import PrettyTable
 
 # Import extensions to set up environment tasks
-import wheeled-legged-rl.tasks  # noqa: F401
+import wheeled_legged_rl.tasks  # noqa: F401
 
 
 def main():
