@@ -1,16 +1,16 @@
 from omni.isaac.lab.utils import configclass
 
-from .rough_env_cfg import UnitreeGo2WRoughEnvCfg
+from .rough_env_cfg import UnitreeB2WRoughEnvCfg
 
 
 @configclass
-class UnitreeGo2WFlatEnvCfg(UnitreeGo2WRoughEnvCfg):
+class UnitreeB2WFlatEnvCfg(UnitreeB2WRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
 
         # override rewards
-        self.rewards.flat_orientation_l2.weight = -0.5
+        self.rewards.flat_orientation_l2.weight = -2.0  # -0.5
         self.rewards.feet_air_time.weight = 0.25
         self.rewards.base_height_l2.params["sensor_cfg"] = None
         # change terrain to flat

@@ -1,8 +1,3 @@
-# Copyright (c) 2022-2024, The Isaac Lab Project Developers.
-# All rights reserved.
-#
-# SPDX-License-Identifier: BSD-3-Clause
-
 """Script to train RL agent with RSL-RL."""
 
 """Launch Isaac Sim Simulator first."""
@@ -49,8 +44,6 @@ import os
 import torch
 from datetime import datetime
 
-from rsl_rl.runners import OnPolicyRunner
-
 from omni.isaac.lab.envs import (
     DirectMARLEnv,
     DirectMARLEnvCfg,
@@ -66,7 +59,6 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg, R
 
 # Import extensions to set up environment tasks
 import wheeled_legged_rl.tasks  # noqa: F401
-from wheeled_legged_rl.third_party.rsl_rl_amp.algorithms import AMPPPO
 from wheeled_legged_rl.third_party.rsl_rl_amp.runners import AmpOnPolicyRunner
 
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -100,6 +92,11 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
     # create isaac environment
     env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
+
+    # save resume path before creating a new log_dir
+    if agent_cfg.resume:
+        resume_path = get_checkpoint_path(log_root_path, agent_cfg.load_run, agent_cfg.load_checkpoint)
+
     # wrap for video recording
     if args_cli.video:
         video_kwargs = {
@@ -120,14 +117,11 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     env = RslRlVecEnvWrapper(env)
 
     # create runner from rsl-rl
-    runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
-    # runner = AmpOnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
+    runner = AmpOnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
     # write git state to logs
     runner.add_git_repo_to_log(__file__)
-    # save resume path before creating a new log_dir
+    # load the checkpoint
     if agent_cfg.resume:
-        # get path to previous checkpoint
-        resume_path = get_checkpoint_path(log_root_path, agent_cfg.load_run, agent_cfg.load_checkpoint)
         print(f"[INFO]: Loading model checkpoint from: {resume_path}")
         # load previously trained model
         runner.load(resume_path)

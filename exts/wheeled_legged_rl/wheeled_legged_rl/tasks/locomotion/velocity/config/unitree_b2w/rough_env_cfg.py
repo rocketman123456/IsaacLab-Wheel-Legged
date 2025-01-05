@@ -6,18 +6,22 @@ from wheeled_legged_rl.tasks.locomotion.velocity.velocity_env_cfg import Locomot
 # Pre-defined configs
 ##
 # use local assets
-from wheeled_legged_rl.assets.unitree import UNITREE_GO2W_CFG  # isort: skip
+from wheeled_legged_rl.assets.unitree import UNITREE_B2W_CFG  # isort: skip
 
 
 @configclass
-class UnitreeGo2WRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
+class UnitreeB2WRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
+
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
 
+        # self.viewer.asset_name = "robot"
+        self.viewer.resolution = (1600, 900)
+
         # ------------------------------Sence------------------------------
-        # switch robot to unitree-a1
-        self.scene.robot = UNITREE_GO2W_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        # switch robot to unitree-b2w
+        self.scene.robot = UNITREE_B2W_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
         self.scene.height_scanner.prim_path = "{ENV_REGEX_NS}/Robot/base"
         # scale down the terrains because the robot is small
         self.scene.terrain.terrain_generator.sub_terrains["boxes"].grid_height_range = (0.025, 0.1)
@@ -32,6 +36,10 @@ class UnitreeGo2WRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         # self.observations.policy.base_lin_vel = None
         # self.observations.policy.height_scan = None
 
+        # no height scan
+        self.scene.height_scanner = None
+        self.observations.policy.height_scan = None
+
         # ------------------------------Actions------------------------------
         # reduce action scale
         self.actions.joint_pos.scale = 0.25
@@ -39,8 +47,8 @@ class UnitreeGo2WRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
 
         # ------------------------------Events------------------------------
         self.events.add_base_mass.params["mass_distribution_params"] = (-1.0, 3.0)
-        self.events.add_base_mass.params["asset_cfg"].body_names = ["base"]
-        self.events.base_external_force_torque.params["asset_cfg"].body_names = ["base"]
+        self.events.add_base_mass.params["asset_cfg"].body_names = ["base_link"]
+        self.events.base_external_force_torque.params["asset_cfg"].body_names = ["base_link"]
         self.events.reset_base.params = {
             "pose_range": {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "yaw": (-3.14, 3.14)},
             "velocity_range": {
@@ -57,30 +65,31 @@ class UnitreeGo2WRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
 
         # ------------------------------Rewards------------------------------
         # General
-        # UNUESD self.rewards.is_alive.weight = 0
-        self.rewards.is_terminated.weight = -10.0
+        self.rewards.is_alive.weight = 0.15
+        # self.rewards.is_terminated.weight = -1.0
 
         # Root penalties
-        self.rewards.lin_vel_z_l2.weight = -2.0
-        self.rewards.ang_vel_xy_l2.weight = -0.05
+        self.rewards.lin_vel_z_l2.weight = -1.0  # -2.0
+        self.rewards.ang_vel_xy_l2.weight = -0.01  # -0.05
         self.rewards.flat_orientation_l2.weight = -0.5
-        self.rewards.base_height_l2.weight = -2.0
-        self.rewards.base_height_l2.params["target_height"] = 0.35
-        self.rewards.base_height_l2.params["asset_cfg"].body_names = ["base"]
-        self.rewards.body_lin_acc_l2.weight = 0
-        self.rewards.body_lin_acc_l2.params["asset_cfg"].body_names = ["base"]
+        self.rewards.base_height_l2.weight = -0.2  # -2.0
+        self.rewards.base_height_l2.params["target_height"] = 0.50
+        self.rewards.base_height_l2.params["asset_cfg"].body_names = ["base_link"]
+        self.rewards.body_lin_acc_l2.weight = -0.0
+        self.rewards.body_lin_acc_l2.params["asset_cfg"].body_names = ["base_link"]
 
         # Joint penaltie
-        self.rewards.joint_torques_l2.weight = -0.0002
+        self.rewards.joint_torques_l2.weight = -0.000002  # -0.0002
         # UNUESD self.rewards.joint_vel_l1.weight = 0.0
         self.rewards.joint_vel_l2.weight = 0
-        self.rewards.joint_acc_l2.weight = -2.5e-7
+        self.rewards.joint_acc_l2.weight = -2.5e-8  # -2.5e-7
         # self.rewards.create_joint_deviation_l1_rewterm("joint_deviation_l1", 0, [""])
         self.rewards.joint_pos_limits.weight = -5.0
-        self.rewards.joint_vel_limits.weight = 0
+        self.rewards.joint_vel_limits.weight = -0.1
+        self.rewards.joint_vel_limits.params["soft_ratio"] = 0.95
 
         # Action penalties
-        self.rewards.action_rate_l2.weight = -0.01
+        self.rewards.action_rate_l2.weight = -0.001  # -0.01
         # UNUESD self.rewards.action_l2.weight = 0.0
 
         # Contact sensor
@@ -104,11 +113,18 @@ class UnitreeGo2WRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.rewards.joint_power.weight = -2e-5
         self.rewards.stand_still_when_zero_command.weight = -0.5
 
+        self.rewards.base_height_l2.params["sensor_cfg"] = None
+
         # If the weight of rewards is 0, set rewards to None
-        if self.__class__.__name__ == "UnitreeGo2WRoughEnvCfg":
+        if self.__class__.__name__ == "UnitreeB2WRoughEnvCfg":
             self.disable_zero_weight_rewards()
 
         # ------------------------------Terminations------------------------------
-        self.terminations.base_contact.params["sensor_cfg"].body_names = ["base"]
+        self.terminations.base_contact.params["sensor_cfg"].body_names = [
+            "base_link",
+            ".*_hip",
+            ".*_thigh",
+            ".*_calf",
+        ]
 
         # ------------------------------Commands------------------------------

@@ -97,19 +97,17 @@ def foot_contact(env: ManagerBasedRLEnv, command_name: str, expect_contact_num: 
     return reward
 
 
-# def foot_slip(
-#     env: ManagerBasedRLEnv, sensor_cfg: SceneEntityCfg, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
-# ) -> torch.Tensor:
-#     """Reward foot_slip"""
-#     # extract the used quantities (to enable type-hinting)
-#     asset: RigidObject = env.scene[asset_cfg.name]
-#     # extract the used quantities (to enable type-hinting)
-#     sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
-#     # compute the reward
-#     contact = sensor.compute_first_contact(env.step_dt)[:, sensor_cfg.body_ids]
-#     foot_velocities_square = torch.square(torch.norm(asset.data.body_lin_vel_w[:, asset_cfg.body_ids, 0:2], dim=2))
-#     reward = torch.sum(contact * foot_velocities_square, dim=1)
-#     return reward
+def foot_slip(env: ManagerBasedRLEnv, sensor_cfg: SceneEntityCfg, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:
+    """Reward foot_slip"""
+    # extract the used quantities (to enable type-hinting)
+    asset: RigidObject = env.scene[asset_cfg.name]
+    # extract the used quantities (to enable type-hinting)
+    sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
+    # compute the reward
+    contact = sensor.compute_first_contact(env.step_dt)[:, sensor_cfg.body_ids]
+    foot_velocities_square = torch.square(torch.norm(asset.data.body_lin_vel_w[:, asset_cfg.body_ids, 0:2], dim=2))
+    reward = torch.sum(contact * foot_velocities_square, dim=1)
+    return reward
 
 
 def joint_power(env: ManagerBasedRLEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")) -> torch.Tensor:

@@ -242,6 +242,7 @@ class RewardsCfg:
     # -- General
     # UNUESD is_alive
     is_terminated = RewTerm(func=mdp.is_terminated, weight=0.0)
+    is_alive = RewTerm(func=mdp.is_alive, weight=0.0)
 
     # -- Root penalties
     lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=0.0)
@@ -268,9 +269,16 @@ class RewardsCfg:
     joint_vel_l2 = RewTerm(func=mdp.joint_vel_l2, weight=0.0, params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*")})
     joint_acc_l2 = RewTerm(func=mdp.joint_acc_l2, weight=0.0, params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*")})
     joint_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0, params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*")})
-    joint_vel_limits = RewTerm(func=mdp.joint_vel_limits, weight=0.0, params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*")})
+    joint_vel_limits = RewTerm(
+        func=mdp.joint_vel_limits,
+        weight=0.0,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),
+            "soft_ratio": 0.9,
+        },
+    )
 
-    # Action penalties
+    # -- Action penalties
     applied_torque_limits = RewTerm(
         func=mdp.applied_torque_limits,
         weight=0.0,
@@ -282,7 +290,7 @@ class RewardsCfg:
     track_lin_vel_xy_exp = RewTerm(func=mdp.track_lin_vel_xy_exp, weight=1.0, params={"command_name": "base_velocity", "std": math.sqrt(0.25)})
     track_ang_vel_z_exp = RewTerm(func=mdp.track_ang_vel_z_exp, weight=0.5, params={"command_name": "base_velocity", "std": math.sqrt(0.25)})
 
-    # Others
+    # -- Others
     feet_air_time = RewTerm(
         func=mdp.feet_air_time,
         weight=0.0,
@@ -334,7 +342,7 @@ class TerminationsCfg:
     """Termination terms for the MDP."""
 
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
-    # Contact sensor
+    # -- Contact sensor
     base_contact = DoneTerm(
         func=mdp.illegal_contact,
         params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="base"), "threshold": 1.0},
@@ -361,13 +369,13 @@ class CurriculumCfg:
 class LocomotionVelocityRoughEnvCfg(ManagerBasedRLEnvCfg):
     """Configuration for the locomotion velocity-tracking environment."""
 
-    # Scene settings
+    # -- Scene settings
     scene: MySceneCfg = MySceneCfg(num_envs=4096, env_spacing=2.5)
-    # Basic settings
+    # -- Basic settings
     observations: ObservationsCfg = ObservationsCfg()
     actions: ActionsCfg = ActionsCfg()
     commands: CommandsCfg = CommandsCfg()
-    # MDP settings
+    # -- MDP settings
     rewards: RewardsCfg = RewardsCfg()
     terminations: TerminationsCfg = TerminationsCfg()
     events: EventCfg = EventCfg()
