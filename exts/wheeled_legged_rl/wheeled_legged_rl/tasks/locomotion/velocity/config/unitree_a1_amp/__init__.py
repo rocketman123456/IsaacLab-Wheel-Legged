@@ -1,3 +1,6 @@
+# Copyright (c) 2024-2025 Ziqi Fan
+# SPDX-License-Identifier: Apache-2.0
+
 import gymnasium as gym
 
 from . import agents
@@ -7,7 +10,7 @@ from . import agents
 ##
 
 gym.register(
-    id="Isaac-Velocity-Flat-Amp-Unitree-A1-v0",
+    id="RobotLab-Isaac-Velocity-Flat-Amp-Unitree-A1-v0",
     entry_point=("wheeled_legged_rl.tasks.locomotion.velocity.config.unitree_a1_amp.env.manager_based_rl_amp_env:ManagerBasedRLAmpEnv"),
     disable_env_checker=True,
     kwargs={
@@ -17,7 +20,7 @@ gym.register(
 )
 
 gym.register(
-    id="Isaac-Velocity-Rough-Amp-Unitree-A1-v0",
+    id="RobotLab-Isaac-Velocity-Rough-Amp-Unitree-A1-v0",
     entry_point=("wheeled_legged_rl.tasks.locomotion.velocity.config.unitree_a1_amp.env.manager_based_rl_amp_env:ManagerBasedRLAmpEnv"),
     disable_env_checker=True,
     kwargs={

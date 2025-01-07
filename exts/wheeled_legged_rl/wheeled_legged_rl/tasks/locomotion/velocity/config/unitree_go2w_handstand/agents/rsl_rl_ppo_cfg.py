@@ -1,6 +1,3 @@
-# Copyright (c) 2024-2025 Ziqi Fan
-# SPDX-License-Identifier: Apache-2.0
-
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
     RslRlOnPolicyRunnerCfg,
@@ -10,11 +7,11 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 
 @configclass
-class UnitreeGo2WRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
+class UnitreeGo2WHandStandRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
-    max_iterations = 3000
+    max_iterations = 1000
     save_interval = 100
-    experiment_name = "unitree_go2w_rough"
+    experiment_name = "unitree_go2w_handstand_rough"
     empirical_normalization = False
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,
@@ -39,9 +36,9 @@ class UnitreeGo2WRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
 
 
 @configclass
-class UnitreeGo2WFlatPPORunnerCfg(UnitreeGo2WRoughPPORunnerCfg):
+class UnitreeGo2WHandStandFlatPPORunnerCfg(UnitreeGo2WHandStandRoughPPORunnerCfg):
     def __post_init__(self):
         super().__post_init__()
 
-        self.max_iterations = 1500
-        self.experiment_name = "unitree_go2w_flat"
+        self.max_iterations = 500
+        self.experiment_name = "unitree_go2w_handstand_flat"

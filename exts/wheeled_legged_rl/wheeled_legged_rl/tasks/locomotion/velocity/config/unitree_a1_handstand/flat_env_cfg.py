@@ -1,3 +1,6 @@
+# Copyright (c) 2024-2025 Ziqi Fan
+# SPDX-License-Identifier: Apache-2.0
+
 from omni.isaac.lab.utils import configclass
 
 from .rough_env_cfg import UnitreeA1HandStandRoughEnvCfg
@@ -17,6 +20,7 @@ class UnitreeA1HandStandFlatEnvCfg(UnitreeA1HandStandRoughEnvCfg):
         # no height scan
         self.scene.height_scanner = None
         self.observations.policy.height_scan = None
+        self.observations.critic.height_scan = None
         # no terrain curriculum
         self.curriculum.terrain_levels = None
 
