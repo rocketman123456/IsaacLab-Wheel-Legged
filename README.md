@@ -187,3 +187,16 @@ Some examples of packages that can likely be excluded are:
 "<path-to-isaac-sim>/extscache/omni.services.*"     // Services tools
 ...
 ```
+
+## Citation
+
+Please cite the following if you use this code or parts of it:
+
+```
+@software{fan-ziqi2024robot_lab,
+  author = {fan-ziqi},
+  title = {{robot_lab: An extension project based on Isaac Lab.}},
+  url = {https://github.com/fan-ziqi/robot_lab},
+  year = {2024}
+}
+```

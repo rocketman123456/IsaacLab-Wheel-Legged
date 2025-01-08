@@ -46,12 +46,27 @@ class UnitreeGo2WHandStandRewardsCfg(RewardsCfg):
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=""),
         },
     )
+    handstand_feet_on_ground = RewTerm(
+        func=rewards.handstand_feet_on_ground,
+        weight=0.0,
+        params={
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=""),
+        },
+    )
     handstand_feet_air_time = RewTerm(
         func=rewards.handstand_feet_air_time,
         weight=0.0,
         params={
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=""),
             "threshold": 5.0,
+        },
+    )
+    handstand_feet_ground_time = RewTerm(
+        func=rewards.handstand_feet_ground_time,
+        weight=0.0,
+        params={
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=""),
+            "threshold": 1.0,
         },
     )
     handstand_orientation_l2 = RewTerm(
@@ -120,7 +135,13 @@ class UnitreeGo2WHandStandRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.events.randomize_apply_external_force_torque.params["asset_cfg"].body_names = [self.base_link_name]
         self.events.randomize_reset_joints.params["position_range"] = (1.0, 1.0)
         self.events.randomize_reset_base.params = {
-            "pose_range": {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "yaw": (-3.14, 3.14)},
+            "pose_range": {
+                "x": (-0.5, 0.5),
+                "y": (-0.5, 0.5),
+                "roll": (-0.01, 0.01),
+                "pitch": (-0.01, 0.01),
+                "yaw": (-3.14, 3.14),
+            },
             "velocity_range": {
                 "x": (-0.5, 0.5),
                 "y": (-0.5, 0.5),
@@ -159,7 +180,7 @@ class UnitreeGo2WHandStandRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.rewards.joint_vel_limits.weight = 0
 
         # Action penalties
-        self.rewards.action_rate_l2.weight = -0.05
+        self.rewards.action_rate_l2.weight = -0.005  # -0.05
         # UNUESD self.rewards.action_l2.weight = 0.0
 
         # Contact sensor
@@ -187,30 +208,42 @@ class UnitreeGo2WHandStandRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         handstand_type = "back"  # which leg on air, can be "front", "back", "left", "right"
         if handstand_type == "front":
             air_foot_name = "F.*_foot"
+            ground_foot_name = "R.*_foot"
             self.rewards.handstand_orientation_l2.weight = -1.0
             self.rewards.handstand_orientation_l2.params["target_gravity"] = [-1.0, 0.0, 0.0]
             self.rewards.handstand_feet_height_exp.params["target_height"] = 0.5
         elif handstand_type == "back":
             air_foot_name = "R.*_foot"
+            ground_foot_name = "F.*_foot"
             self.rewards.handstand_orientation_l2.weight = -1.0
             self.rewards.handstand_orientation_l2.params["target_gravity"] = [1.0, 0.0, 0.0]
             self.rewards.handstand_feet_height_exp.params["target_height"] = 0.5
         elif handstand_type == "left":
             air_foot_name = ".*L_foot"
+            ground_foot_name = ".*R_foot"
             self.rewards.handstand_orientation_l2.weight = 0
             self.rewards.handstand_orientation_l2.params["target_gravity"] = [0.0, -1.0, 0.0]
             self.rewards.handstand_feet_height_exp.params["target_height"] = 0.3
         elif handstand_type == "right":
             air_foot_name = ".*R_foot"
+            ground_foot_name = ".*L_foot"
             self.rewards.handstand_orientation_l2.weight = 0
             self.rewards.handstand_orientation_l2.params["target_gravity"] = [0.0, 1.0, 0.0]
             self.rewards.handstand_feet_height_exp.params["target_height"] = 0.3
-        self.rewards.handstand_feet_height_exp.weight = 10
+
+        self.rewards.handstand_feet_height_exp.weight = 5.0  # 10.0
         self.rewards.handstand_feet_height_exp.params["asset_cfg"].body_names = [air_foot_name]
-        self.rewards.handstand_feet_on_air.weight = 1.0
+        self.rewards.handstand_feet_on_air.weight = 1.0  # 1.0
         self.rewards.handstand_feet_on_air.params["sensor_cfg"].body_names = [air_foot_name]
-        self.rewards.handstand_feet_air_time.weight = 1.0
+        self.rewards.handstand_feet_air_time.weight = 1.0  # 1.0
         self.rewards.handstand_feet_air_time.params["sensor_cfg"].body_names = [air_foot_name]
+        self.rewards.handstand_feet_ground_time.weight = 1.0  # 1.0
+
+        self.rewards.handstand_feet_on_ground.weight = 1.0  # 1.0
+        self.rewards.handstand_feet_on_ground.params["sensor_cfg"].body_names = [ground_foot_name]
+        self.rewards.handstand_feet_ground_time.weight = -1.0  # 1.0
+        self.rewards.handstand_feet_ground_time.params["sensor_cfg"].body_names = [ground_foot_name]
+
         self.rewards.feet_gait.weight = 0
         self.rewards.feet_gait.params["synced_feet_pair_names"] = (("FL_foot", "RR_foot"), ("FR_foot", "RL_foot"))
 

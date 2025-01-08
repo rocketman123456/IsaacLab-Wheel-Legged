@@ -9,7 +9,7 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 @configclass
 class UnitreeGo2WHandStandRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
-    max_iterations = 1000
+    max_iterations = 3000
     save_interval = 100
     experiment_name = "unitree_go2w_handstand_rough"
     empirical_normalization = False
@@ -40,5 +40,5 @@ class UnitreeGo2WHandStandFlatPPORunnerCfg(UnitreeGo2WHandStandRoughPPORunnerCfg
     def __post_init__(self):
         super().__post_init__()
 
-        self.max_iterations = 500
+        self.max_iterations = 3000
         self.experiment_name = "unitree_go2w_handstand_flat"

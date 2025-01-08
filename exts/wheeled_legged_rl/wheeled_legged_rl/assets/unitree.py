@@ -83,7 +83,7 @@ UNITREE_GO2W_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.50),
+        pos=(0.0, 0.0, 0.30),
         joint_pos={
             ".*L_hip_joint": 0.1,
             ".*R_hip_joint": -0.1,
